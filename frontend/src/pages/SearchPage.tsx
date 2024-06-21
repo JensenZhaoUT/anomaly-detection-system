@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
 
 const SearchPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [anomalies, setAnomalies] = useState([]);
+  const [anomalies, setAnomalies] = useState<any[]>([]);
   const [selectedAnomaly, setSelectedAnomaly] = useState<any | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    fetchAnomalies();
+  }, []);
+
+  const fetchAnomalies = async () => {
+    try {
+      const response = await axios.get('/api/anomalies');
+      if (Array.isArray(response.data)) {
+        setAnomalies(response.data);
+      } else {
+        console.error('API response is not an array', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching anomalies', error);
+    }
+  };
 
   const handleSearch = async () => {
     try {
       const response = await axios.get(`/api/anomalies?search=${searchTerm}`);
-      setAnomalies(response.data);
+      if (Array.isArray(response.data)) {
+        setAnomalies(response.data);
+      } else {
+        console.error('API response is not an array', response.data);
+      }
     } catch (error) {
       console.error('Error fetching anomalies', error);
     }
@@ -18,6 +40,29 @@ const SearchPage: React.FC = () => {
 
   const handleRowClick = (anomaly: any) => {
     setSelectedAnomaly(anomaly);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setVideoFile(event.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!videoFile) return;
+    const formData = new FormData();
+    formData.append('file', videoFile);
+
+    try {
+      const response = await axios.post('/api/files/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('File uploaded successfully', response.data);
+    } catch (error) {
+      console.error('Error uploading file', error);
+    }
   };
 
   return (
@@ -55,6 +100,7 @@ const SearchPage: React.FC = () => {
         <DialogContent>
           {selectedAnomaly && (
             <div>
+              <p>ID: {selectedAnomaly.id}</p>
               <p>Time: {selectedAnomaly.time}</p>
               <p>Type: {selectedAnomaly.type}</p>
               <p>Message: {selectedAnomaly.message}</p>
@@ -69,6 +115,20 @@ const SearchPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <h2>Upload Video</h2>
+      <input type="file" accept="video/*" onChange={handleFileChange} />
+      <Button variant="contained" color="primary" onClick={handleFileUpload}>
+        Upload
+      </Button>
+      {videoFile && (
+        <div>
+          <h2>Video</h2>
+          <video width="600" controls>
+            <source src={URL.createObjectURL(videoFile)} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      )}
     </Container>
   );
 };
