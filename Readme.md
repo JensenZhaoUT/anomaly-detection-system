@@ -5,3 +5,7 @@ rsync -avz --exclude-from='rsync-exclude.txt' \-e "ssh -i ~/.ssh/medium-jensen.p
 mysql -h database-anomaly-detection.clskoem8w7z5.us-east-1.rds.amazonaws.com -u admin -p database-anomaly-detection
 
 # Install process in EC2
+
+cd frontend/
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material
