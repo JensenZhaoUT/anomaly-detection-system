@@ -1,28 +1,21 @@
-import { Pool } from 'pg';
+import pool from './db';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
-const pool = new Pool({
-  user: 'your-db-username',
-  host: 'your-db-host',
-  database: 'your-db-name',
-  password: 'your-db-password',
-  port: 5432,
-});
-
-export const getAnomalies = async () => {
-  const result = await pool.query('SELECT * FROM anomalies');
-  return result.rows;
+export const getAnomalies = async (): Promise<RowDataPacket[]> => {
+  const [rows] = await pool.query<RowDataPacket[]>('SELECT * FROM anomalies');
+  return rows;
 };
 
 export const createAnomaly = async (anomaly: any) => {
   const { time, type, message, frame, details } = anomaly;
-  const result = await pool.query(
-    'INSERT INTO anomalies (time, type, message, frame, details) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [time, type, message, frame, details]
+  const [result] = await pool.query<ResultSetHeader>(
+    'INSERT INTO anomalies (time, type, message, frame, details) VALUES (?, ?, ?, ?, ?)',
+    [time, type, message, frame, JSON.stringify(details)]
   );
-  return result.rows[0];
+  return { id: result.insertId, ...anomaly };
 };
 
-export const getAnomalyById = async (id: string) => {
-  const result = await pool.query('SELECT * FROM anomalies WHERE id = $1', [id]);
-  return result.rows[0];
+export const getAnomalyById = async (id: string): Promise<RowDataPacket> => {
+  const [rows] = await pool.query<RowDataPacket[]>('SELECT * FROM anomalies WHERE id = ?', [id]);
+  return rows[0];
 };
