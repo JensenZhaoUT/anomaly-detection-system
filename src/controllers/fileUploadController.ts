@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
+import { detectAnomalies } from '../utils/anomalyDetection';
+import { Anomaly } from '../utils/types';
+import { createAnomaly } from '../models/anomalyModel';
 
 const storage = multer.diskStorage({
   destination: './uploads/',
@@ -19,11 +22,18 @@ export const handleFileUpload = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     const filePath = path.join(__dirname, '../../uploads', req.file.filename);
-    // Perform anomaly detection here using the uploaded file
-    // You can call a function that runs the ML model and returns results
+    console.log('File uploaded:', filePath);
+    const anomalies: Anomaly[] = await detectAnomalies(filePath);
+    console.log('Anomalies detected:', anomalies);
+
+    for (const anomaly of anomalies) {
+      await createAnomaly(anomaly);
+      console.log('Anomaly stored:', anomaly);
+    }
 
     res.status(200).json({ message: 'File uploaded successfully', filePath });
   } catch (error) {
+    console.error('Error uploading file:', error);
     res.status(500).json({ error: 'Failed to upload file' });
   }
 };

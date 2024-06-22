@@ -70,6 +70,9 @@ const SearchPage = () => {
       });
       console.log('File uploaded successfully', response.data);
       setDialogOpen(true);
+      // Fetch anomalies again after upload
+      const anomaliesResponse = await axios.get('/api/anomalies');
+      setAnomalies(anomaliesResponse.data);
     } catch (error) {
       console.error('Error uploading file:', error);
     }
