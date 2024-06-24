@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { detectAnomalies } from '../utils/anomalyDetection';
-import { Anomaly } from '../utils/types';
 import { createAnomaly } from '../models/anomalyModel';
 
 const storage = multer.diskStorage({
@@ -22,15 +21,10 @@ export const handleFileUpload = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     const filePath = path.join(__dirname, '../../uploads', req.file.filename);
-    console.log('File uploaded:', filePath);
-    const anomalies: Anomaly[] = await detectAnomalies(filePath);
-    console.log('Anomalies detected:', anomalies);
-
+    const anomalies = await detectAnomalies(filePath);
     for (const anomaly of anomalies) {
       await createAnomaly(anomaly);
-      console.log('Anomaly stored:', anomaly);
     }
-
     res.status(200).json({ message: 'File uploaded successfully', filePath });
   } catch (error) {
     console.error('Error uploading file:', error);
