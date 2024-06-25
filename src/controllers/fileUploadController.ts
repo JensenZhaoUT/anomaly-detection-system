@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import moment from "moment-timezone";
 import { createAnomaly } from "../models/anomalyModel";
 
 const storage = multer.diskStorage({
@@ -35,9 +34,6 @@ export const saveAnomalies = async (req: Request, res: Response) => {
     console.log("Received anomalies:", anomalies);
     const savedAnomalies = [];
     for (const anomaly of anomalies) {
-      // Convert time to EST
-      anomaly.time = moment(anomaly.time).tz("America/Toronto").format();
-
       const newAnomaly = await createAnomaly(anomaly);
       savedAnomalies.push(newAnomaly);
       console.log("Saved anomaly:", newAnomaly);

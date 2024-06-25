@@ -34,3 +34,10 @@ pm2 start dist/index.js --name "anomaly-detection-server"
 
 ./darknet detector test data/obj.data yolo-obj.cfg backup/yolo-obj_best.weights -ext_output data/test_image.jpg
 ./darknet detector demo data/obj.data yolo-obj.cfg backup/yolo-obj_best.weights -ext_output data/video.mp4
+
+# ESLINT test
+```
+npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-prettier eslint-plugin-prettier prettier --save-dev
+npm install typescript@5.1.6 --save-dev
+npm run lint
+```
