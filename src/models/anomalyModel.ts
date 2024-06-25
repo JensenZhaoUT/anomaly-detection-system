@@ -7,10 +7,10 @@ export const getAnomalies = async (): Promise<RowDataPacket[]> => {
 };
 
 export const createAnomaly = async (anomaly: any) => {
-  const { time, type, message, frame, details } = anomaly;
+  const { time, type, message, frame } = anomaly;
   const [result] = await pool.query<ResultSetHeader>(
-    'INSERT INTO anomalies (time, type, message, frame, details) VALUES (?, ?, ?, ?, ?)',
-    [time, type, message, frame, JSON.stringify(details)]
+    'INSERT INTO anomalies (time, type, message, frame) VALUES (?, ?, ?, ?)',
+    [time, type, message, frame]
   );
   return { id: result.insertId, ...anomaly };
 };
