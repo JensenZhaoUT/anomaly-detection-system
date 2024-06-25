@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   destination: "./uploads/",
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
-  }
+  },
 });
 
 const upload = multer({ storage });
@@ -37,14 +37,17 @@ export const saveAnomalies = async (req: Request, res: Response) => {
     for (const anomaly of anomalies) {
       // Convert time to EST
       anomaly.time = moment(anomaly.time).tz("America/Toronto").format();
-      
+
       const newAnomaly = await createAnomaly(anomaly);
       savedAnomalies.push(newAnomaly);
       console.log("Saved anomaly:", newAnomaly);
 
       // Save the frame image
       const framePath = path.join(__dirname, "../../images", anomaly.frame);
-      const base64Data = anomaly.frameData.replace(/^data:image\/png;base64,/, "");
+      const base64Data = anomaly.frameData.replace(
+        /^data:image\/png;base64,/,
+        ""
+      );
       fs.writeFileSync(framePath, base64Data, "base64");
     }
     res.status(201).json(savedAnomalies);

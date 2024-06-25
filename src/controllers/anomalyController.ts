@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { getAnomalies, createAnomaly, getAnomalyById } from "../models/anomalyModel";
+import {
+  getAnomalies,
+  createAnomaly,
+  getAnomalyById,
+} from "../models/anomalyModel";
 
 export const getAllAnomalies = async (req: Request, res: Response) => {
   try {

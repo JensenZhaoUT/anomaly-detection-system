@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { uploadFile, handleFileUpload } from "../controllers/fileUploadController";
+import {
+  uploadFile,
+  handleFileUpload,
+} from "../controllers/fileUploadController";
 
 const router = Router();
 

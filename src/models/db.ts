@@ -7,7 +7,7 @@ const pool = createPool({
   database: "database_anomaly_detection",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 export default pool;
