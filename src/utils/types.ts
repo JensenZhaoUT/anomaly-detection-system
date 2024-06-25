@@ -4,4 +4,3 @@ export interface Anomaly {
     message: string;
     frame: string;
   }
-  
