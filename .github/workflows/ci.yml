@@ -46,7 +46,7 @@ jobs:
         retention-days: 5
 
     - name: Run Playwright tests
-      run: npx playwright test --reporter=list
+      run: npx playwright test
 
     - name: Upload Playwright test results
       if: always()
