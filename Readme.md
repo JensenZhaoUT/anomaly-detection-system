@@ -1,7 +1,3 @@
-
-
-# Contains DB information
-
 # Automated Anomaly Detection System
 
 ## Overview
@@ -35,6 +31,7 @@ mysql -h database-anomaly-detection.clskoem8w7z5.us-east-1.rds.amazonaws.com -u 
 ```
 
 ### Install Dependencies on EC2
+```bash
 cd ~/app
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -47,19 +44,26 @@ cd frontend/
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
 npm install react-app-rewired customize-cra
+```
 
 ## Run Eslint check
+```bash
 npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-prettier eslint-plugin-prettier prettier --save-dev
 npm install typescript@5.1.6 --save-dev
 npm run lint
+```
 
 ## Unit Test with Jest
+```bash
 npm run test -- --coverage
+```
 
 ## Playwright for End-to-End Tests
+```bash
 npx playwright test
+```
 
-# Continuous Integration/Continuous Deployment (CI/CD)
+## Continuous Integration/Continuous Deployment (CI/CD)
 The project uses GitHub Actions for CI/CD. The configuration file .github/workflows/ci.yml includes steps for:
 
 1. Installing dependencies
@@ -72,3 +76,9 @@ The project uses GitHub Actions for CI/CD. The configuration file .github/workfl
 **Notes**
 1. Ensure your AWS RDS instance is up and running with the correct configurations.
 2. The rsync-exclude.txt should contain the files and directories you want to exclude from synchronization.
+
+## Troubleshooting
+if the server does not start, check the logs by:
+```bash
+pm2 logs anomaly-detection-server
+```
