@@ -28,7 +28,24 @@ export const handleFileUpload = async (req: Request, res: Response) => {
   }
 };
 
-// Rename this function to avoid conflicts
+// Helper function to generate a unique filename with timestamp
+const generateUniqueFilename = (baseName: string) => {
+  const date = new Date();
+  const timestamp = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}_${date
+    .getHours()
+    .toString()
+    .padStart(2, '0')}-${date.getMinutes().toString().padStart(2, '0')}-${date
+    .getSeconds()
+    .toString()
+    .padStart(2, '0')}`;
+  
+  const extension = path.extname(baseName);
+  const baseNameWithoutExt = path.basename(baseName, extension);
+  return `${baseNameWithoutExt}_${timestamp}${extension}`;
+};
+
 export const saveUploadedAnomalies = async (req: Request, res: Response) => {
   try {
     const anomalies = req.body;
@@ -36,11 +53,11 @@ export const saveUploadedAnomalies = async (req: Request, res: Response) => {
     const savedAnomalies = [];
     for (const anomaly of anomalies) {
       const newAnomaly = await createAnomaly(anomaly);
-      savedAnomalies.push(newAnomaly);
-      console.log("Saved anomaly:", newAnomaly);
+      // Generate unique filename
+      const uniqueFilename = generateUniqueFilename(anomaly.frame);
 
-      // Save the frame image
-      const framePath = path.join(__dirname, "../../images", anomaly.frame);
+      // Save the frame image with the unique filename
+      const framePath = path.join(__dirname, "../../images", uniqueFilename);
       console.log(`Saving image to: ${framePath}`);
       const base64Data = anomaly.frameData.replace(
         /^data:image\/png;base64,/,
@@ -52,6 +69,11 @@ export const saveUploadedAnomalies = async (req: Request, res: Response) => {
 
       fs.writeFileSync(framePath, base64Data, "base64");
       console.log(`Image saved to: ${framePath}`);
+
+      // Update anomaly frame with unique filename before saving to the database
+      newAnomaly.frame = uniqueFilename;
+      savedAnomalies.push(newAnomaly);
+      console.log("Saved anomaly with updated frame:", newAnomaly);
     }
     res.status(201).json(savedAnomalies);
   } catch (error) {
