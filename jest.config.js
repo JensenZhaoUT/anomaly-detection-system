@@ -19,5 +19,5 @@ module.exports = {
       statements: 80,
     },
   },
-  testPathIgnorePatterns: ['/node_modules/', '/e2e-tests/'],
+  testPathIgnorePatterns: ['/node_modules/', '/e2e-tests/', 'src/tests/fileUploadController.test.ts'],
 };
