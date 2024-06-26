@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-wasm';
-import { Container, Button, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Button, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 
 interface Anomaly {
@@ -30,6 +30,7 @@ const SearchPage: React.FC = () => {
   const [model, setModel] = useState<tf.GraphModel | null>(null);
   const [anomalyCounter, setAnomalyCounter] = useState(0);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const loadModel = async () => {
     try {
@@ -83,6 +84,7 @@ const SearchPage: React.FC = () => {
       setAnomalies(anomaliesResponse.data);
       setFilteredAnomalies(anomaliesResponse.data);  // Update filtered anomalies
       console.log('Fetched anomalies after upload:', anomaliesResponse.data);
+      setSnackbarOpen(true); // Open snackbar
     } catch (error) {
       console.error('Error uploading file:', error);
     }
@@ -222,6 +224,10 @@ const SearchPage: React.FC = () => {
     setFilteredAnomalies(filtered);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <Container>
       <h1>Search Anomalies</h1>
@@ -314,6 +320,16 @@ const SearchPage: React.FC = () => {
           <video controls width="600" src={videoSrc}></video>
         </div>
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success">
+          File uploaded successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
