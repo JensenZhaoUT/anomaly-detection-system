@@ -8,3 +8,10 @@ dist
 .idea
 *.log
 *.tmp
+e2e-tests
+assets
+coverage
+.github
+playwright-report
+src/tests
+uploads

@@ -19,7 +19,7 @@ app.use("/api/files", fileUploadRoutes);
 
 // Serve model files and static images
 app.use("/model", express.static(path.join(__dirname, "model")));
-app.use("/static/images", express.static(path.join(__dirname, "images")));
+app.use("/static/images", express.static(path.join(__dirname, "../images"))); // This line configures the static file serving
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
@@ -29,4 +29,5 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Serving images from: ${path.join(__dirname, "../images")}`);
 });
