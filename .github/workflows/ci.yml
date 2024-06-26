@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD for Unit Testing, Eslint Check and E2E Testing
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  e2e-tests:
+  ci-cd:
     runs-on: ubuntu-latest
 
     strategy:
@@ -34,6 +34,17 @@ jobs:
     - name: Run ESLint
       run: npx eslint 'src/**/*.{ts,tsx}' # Adjust the path according to your project structure
 
+    - name: Run Jest tests
+      run: npm run jest -- --coverage
+
+    - name: Upload Jest coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/lcov-report
+        retention-days: 5
+
     - name: Run Playwright tests
       run: npx playwright test --reporter=list
 
@@ -43,3 +54,4 @@ jobs:
       with:
         name: playwright-results
         path: playwright-report
+        retention-days: 5
