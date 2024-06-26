@@ -3,7 +3,6 @@ import {
   getAllAnomalies,
   createNewAnomaly,
   getAnomaly,
-  saveAnomalies,
 } from "../controllers/anomalyController";
 
 import { saveUploadedAnomalies } from "../controllers/fileUploadController"; // Import the renamed function
