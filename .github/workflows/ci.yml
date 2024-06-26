@@ -35,7 +35,7 @@ jobs:
       run: npx eslint 'src/**/*.{ts,tsx}' # Adjust the path according to your project structure
 
     - name: Run Jest tests
-      run: npm run jest -- --coverage
+      run: npm run test:jest
 
     - name: Upload Jest coverage report
       if: always()
