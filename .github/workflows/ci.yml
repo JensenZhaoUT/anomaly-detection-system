@@ -1,5 +1,4 @@
 name: CI/CD for Unit Testing, Eslint Check and E2E Testing
-
 on:
   push:
     branches:
