@@ -1,7 +1,14 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
+  testMatch: [
+    '**/__tests__/**/*.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[tj]s?(x)'
+  ],
+  testPathIgnorePatterns: [
+    'e2e-tests/uploadVideo.spec.ts',
+    'e2e-tests/searchAnomalies.spec.ts'
+  ],
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
@@ -9,7 +16,7 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{ts,js}',
     '!src/**/*.d.ts',
-    '!src/index.ts'
+    '!src/index.ts',
   ],
   coverageThreshold: {
     global: {
@@ -19,5 +26,4 @@ module.exports = {
       statements: 80,
     },
   },
-  testPathIgnorePatterns: ['/e2e-tests/', 'src/tests/fileUploadController.test.ts', 'src/tests/anomalyController.test.ts'],
 };
