@@ -40,18 +40,16 @@ export const saveUploadedAnomalies = async (req: Request, res: Response) => {
       console.log("Saved anomaly:", newAnomaly);
 
       // Save the frame image
-      const framePath = path.join(__dirname, "../../images", anomaly.frame);
-      console.log(`Saving image to: ${framePath}`);
+      const framePathData = path.join(__dirname, "../../data", anomaly.frame); // Path for original images
+      console.log(`Saving image to: ${framePathData}`);
       const base64Data = anomaly.frameData.replace(
         /^data:image\/png;base64,/,
         ""
       );
 
-      // Log the base64Data length to confirm it's being received correctly
-      console.log(`Base64 image data length: ${base64Data.length}`);
-
-      fs.writeFileSync(framePath, base64Data, "base64");
-      console.log(`Image saved to: ${framePath}`);
+      // Save image to data directory
+      fs.writeFileSync(framePathData, base64Data, "base64");
+      console.log(`Image saved to: ${framePathData}`);
     }
     res.status(201).json(savedAnomalies);
   } catch (error) {

@@ -167,7 +167,7 @@ const SearchPage: React.FC = () => {
             time: new Date().toISOString(),
             type: 'proximity_alert',
             message: 'Detected vehicles/pedestrians/bicyclists in close proximity',
-            frame: `frame_${frameNumber}.png`,
+            frame: `frame_${frameNumber}.jpg`,
             frameData: frame.src  // Add base64 image data
           };
           anomalies.push(newAnomaly);

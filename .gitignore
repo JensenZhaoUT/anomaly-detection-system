@@ -6,13 +6,16 @@ yarn-error.log*
 
 # model weights
 ONNX/yolo-obj_best.weights
-
+/data/*
 # Logs
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/images
+backup
+
 
 # Dependency directories
 node_modules/
