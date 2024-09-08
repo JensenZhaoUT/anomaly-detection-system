@@ -20,6 +20,15 @@ This project implements an automated anomaly detection system using a Node.js ba
 
 ## Setup Instructions
 
+### AWS Setup
+1. Start the AWS EC2 instance
+2. Select "Connect" in the AWS EC2 Instance
+
+```bash
+cd ~/.ssh
+ssh -i "large_jensen.pem" ubuntu@ec2-44-219-129-210.compute-1.amazonaws.com
+```
+
 ### Sync Application Files to EC2
 ```bash
 rsync -avz --exclude-from='rsync-exclude.txt' \-e "ssh -i ~/.ssh/medium-jensen.pem" \. ubuntu@:~/app
@@ -27,7 +36,10 @@ rsync -avz --exclude-from='rsync-exclude.txt' \-e "ssh -i ~/.ssh/medium-jensen.p
 
 ### Database Configuration
 ```bash
-mysql -h database-anomaly-detection.clskoem8w7z5.us-east-1.rds.amazonaws.com -u admin -p database-anomaly-detection
+mysql -h database-anomaly-detection.clskoem8w7z5.us-east-1.rds.amazonaws.com -u admin -p database_anomaly_detection
+SELECT * FROM anomalies;
+DELETE FROM anomalies WHERE id = 150;
+DELETE FROM anomalies WHERE id BETWEEN 170 AND 175;
 ```
 
 ### Install Dependencies on EC2
@@ -44,6 +56,14 @@ cd frontend/
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
 npm install react-app-rewired customize-cra
+```
+
+### Setup Node.js Package
+```bash
+cd frontend/
+npm run build
+cd ..
+npx tsc
 ```
 
 ## Run Eslint check
@@ -77,8 +97,15 @@ The project uses GitHub Actions for CI/CD. The configuration file .github/workfl
 1. Ensure your AWS RDS instance is up and running with the correct configurations.
 2. The rsync-exclude.txt should contain the files and directories you want to exclude from synchronization.
 
+## Start the server
+```bash
+pm2 start dist/index.js --name "anomaly-detection-server"
 ## Troubleshooting
 if the server does not start, check the logs by:
 ```bash
 pm2 logs anomaly-detection-server
 ```
+
+## Access the website
+Public IPV4 Address:<Portal Number>
+Note: No Https;//, just the digit address
